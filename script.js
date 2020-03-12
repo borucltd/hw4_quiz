@@ -17,6 +17,7 @@ let questionsArray = [
     "Is JavaScript and older brother to Java?"
 ]
 
+// all possible answers
 let answersArray = [
     "A - low level programming language, B - subprogram written in Java, C - scripting lanugage for websites, D - hell knows ",
     "A - //, B - *, C - <!--, D - #",
@@ -26,15 +27,26 @@ let answersArray = [
     "A - true, B - false"
 ]
 
-// questions -> we create array of objects "question"
-let questions = [
-    new question(questionsArray[0],answersArray[0]),
-    new question(questionsArray[1],answersArray[1]),
-    new question(questionsArray[2],answersArray[2]),
-    new question(questionsArray[3],answersArray[3]),
-    new question(questionsArray[4],answersArray[4]),
+// c
+let correctAnswersArray = [
+    "C - scripting lanugage for websites",
+    "A - //",
+    "D - value and type comparison",
+    "A - i++, B - i = i + 1",
+    "A - prompts, B - alerts,D - config",
+    "B - false"
 ]
 
+// questions -> we create array of objects "question"
+let questions = [];
+for (let i = 0; i < questionsArray.length; i++){
+    let question_object = new question(questionsArray[i],answersArray[i],correctAnswersArray[i]);
+    questions.push(question_object);
+    console.log(questions[i].choices);
+    console.log(questions[i].correctChoices);
+}
 
 
-console.log(questions[0]);
+
+
+
