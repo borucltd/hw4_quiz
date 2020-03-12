@@ -2,12 +2,12 @@
 let quizTime = 300;
 
 // each wrong answer decreases time by 10 seconds
-let deceeaseTime = 10;
+let decreaseTime = 10;
 
 // total answers, index 0 correct answer, index 1 wrong answer
 let totalAnswers = [0, 0];
 
-// questions (taken from https://www.guru99.com/javascript-interview-questions-answers.html )
+// questions (some are taken from https://www.guru99.com/javascript-interview-questions-answers.html )
 let questionsArray = [
     "What is JavaScript?",
     "Which symbol is used for comments in Javascript?",
@@ -17,8 +17,24 @@ let questionsArray = [
     "Is JavaScript and older brother to Java?"
 ]
 
-// answers -> correlated to questions array
-// 4 means we have 4 multipe choice answers
-// 4 -> 4 answers, answer A and B are correct
-let numberOfAnswers = [4,4,4,4,4,2];
+let answersArray = [
+    "A - low level programming language, B - subprogram written in Java, C - scripting lanugage for websites, D - hell knows ",
+    "A - //, B - *, C - <!--, D - #",
+    "A - assingment, B - value comparison, C - type comparison, D - value and type comparison",
+    "A - i++, B - i = i + 1, C - i%2, D - you can't do that",
+    "A - prompts, B - alerts, C - popup, D - config",
+    "A - true, B - false"
+]
 
+// questions -> we create array of objects "question"
+let questions = [
+    new question(questionsArray[0],answersArray[0]),
+    new question(questionsArray[1],answersArray[1]),
+    new question(questionsArray[2],answersArray[2]),
+    new question(questionsArray[3],answersArray[3]),
+    new question(questionsArray[4],answersArray[4]),
+]
+
+
+
+console.log(questions[0]);
