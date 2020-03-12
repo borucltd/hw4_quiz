@@ -82,8 +82,8 @@ function startQuiz() {
         document.querySelector("#timeLeft").textContent = quizTime;       
       }, 1000);
     
-    challengeQuestion(questions,0);
-    console.log("start");
+    askQuestion(questions,0,false);
+
 
 }
 
@@ -100,7 +100,7 @@ function stopQuiz() {
 
 }
 
-function challengeQuestion( question,  questionNumber) {
+function askQuestion( question,  questionNumber, clear) {
 
     // display question
     let questionParagraph = document.createElement("P");  
@@ -110,29 +110,56 @@ function challengeQuestion( question,  questionNumber) {
     // form answer section, it depends on number of answers
     for (let i = 0; i < question[questionNumber].choices; i++) {
         
-        let answerFormGroup = document.createElement("SECTION");
+        
+        
+        //answer.innerHTML = question[questionNumber].answers[i];
+        if (clear === false) {
+            let answerFormGroup = document.createElement("SECTION");
         let answerCheckBox = document.createElement("INPUT");
         let answerLabel = document.createElement("LABEL");
 
         answerFormGroup.setAttribute("class","form-group");
+        answerFormGroup.setAttribute("id","fg"+i);
         answerCheckBox.setAttribute("type", "checkbox");
         answerCheckBox.setAttribute("id", i);
         answerLabel.setAttribute("for",i);
-        answerLabel.innerHTML = question[questionNumber].answers.split(",")[i];
-        //answer.innerHTML = question[questionNumber].answers[i];
-        answerFormGroup.appendChild(answerCheckBox);
-        answerFormGroup.appendChild(answerLabel);
-        document.querySelector("#answersSection").appendChild(answerFormGroup);
+            answerLabel.innerHTML = question[questionNumber].answers.split(",")[i];
+            answerFormGroup.appendChild(answerCheckBox);
+            answerFormGroup.appendChild(answerLabel);
+            document.querySelector("#answersSection").appendChild(answerFormGroup);
+        } else {
+            console.log("removing actual question");
+            var removeFormGroup = document.getElementById("fg"+i);   
+            for (let j =0; j < removeFormGroup.childElementCount; j++){
+                removeFormGroup.removeChild(removeFormGroup.childNodes[j]);
+
+
+            }            
+        }
+       
         
 
     }
 
 }
 
+function submitAnswer() {
 
+    // Check if there is a not-asked questions
+    if (currentQuestion < 5) {
+
+        askQuestion(questions,currentQuestion,true);
+        currentQuestion++;
+        askQuestion(questions,currentQuestion,false);
+    }
+
+
+
+}
 
 // =================
 // Section dynamic HTML
 // =================
 document.querySelector("#startButton").addEventListener("click",startQuiz);
 document.querySelector("#stopButton").addEventListener("click",stopQuiz);
+document.querySelector("#submitButton").addEventListener("click",submitAnswer);
