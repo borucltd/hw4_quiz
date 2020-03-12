@@ -103,11 +103,29 @@ function stopQuiz() {
 function challengeQuestion( question,  questionNumber) {
 
     // display question
-    //document.querySelector("#questionSection").addEventListener("click",startQuiz);
-    console.log(question[questionNumber].question);
-    // display available answers
-    //document.querySelector("#answersQuestion").addEventListener("click",startQuiz);
-    console.log(questions[questionNumber].answers);
+    let questionParagraph = document.createElement("P");  
+    let questionText = document.createTextNode(question[questionNumber].question);       
+    document.querySelector("#questionSection").appendChild(questionParagraph.appendChild(questionText));
+   
+    // form answer section, it depends on number of answers
+    for (let i = 0; i < question[questionNumber].choices; i++) {
+        
+        let answerFormGroup = document.createElement("SECTION");
+        let answerCheckBox = document.createElement("INPUT");
+        let answerLabel = document.createElement("LABEL");
+
+        answerFormGroup.setAttribute("class","form-group");
+        answerCheckBox.setAttribute("type", "checkbox");
+        answerCheckBox.setAttribute("id", i);
+        answerLabel.setAttribute("for",i);
+        answerLabel.innerHTML = question[questionNumber].answers.split(",")[i];
+        //answer.innerHTML = question[questionNumber].answers[i];
+        answerFormGroup.appendChild(answerCheckBox);
+        answerFormGroup.appendChild(answerLabel);
+        document.querySelector("#answersSection").appendChild(answerFormGroup);
+        
+
+    }
 
 }
 
