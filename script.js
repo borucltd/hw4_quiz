@@ -1,3 +1,7 @@
+// =================
+// Section variables
+// =================
+
 // 5-minutes quiz
 let quizTime = 300;
 
@@ -46,6 +50,7 @@ let correctAnswersArray = [
 // questions - this is array of objects
 let questions = [];
 for (let i = 0; i < questionsArray.length; i++){
+
     // create new object
     let question_object = new question(questionsArray[i],answersArray[i],correctAnswersArray[i]);
     // push new object to array
@@ -53,8 +58,12 @@ for (let i = 0; i < questionsArray.length; i++){
     // debug
     console.log(questions[i].choices);
     console.log(questions[i].correctChoices);
+
 }
 
+// =================
+// Section functions
+// =================
 function startQuiz() {
 
     // enable stop button
@@ -64,9 +73,7 @@ function startQuiz() {
 
 
     timerId = setInterval(function() {
-        quizTime--;
-        
-    
+        quizTime--; 
         // need to check <= 0, === 0 is not enough
         if(quizTime <= 0) {
           // stop the timer
@@ -74,14 +81,14 @@ function startQuiz() {
         }
         document.querySelector("#timeLeft").textContent = quizTime;       
       }, 1000);
-
     
-
-
+    challengeQuestion(questions,0);
     console.log("start");
+
 }
 
 function stopQuiz() {
+
     // disable buttons
     document.querySelector("#startButton").setAttribute("class","btn btn-dark disabled");
     document.querySelector("#submitButton").setAttribute("class","btn btn-dark disabled");
@@ -90,13 +97,24 @@ function stopQuiz() {
     clearInterval(timerId);
     quizTime = 1;
     console.log("YOU GAVE UP!!!");
+
 }
 
-// here we add events
-//startButton
-//.addEventListener("click", function() {
+function challengeQuestion( question,  questionNumber) {
+
+    // display question
+    //document.querySelector("#questionSection").addEventListener("click",startQuiz);
+    console.log(question[questionNumber].question);
+    // display available answers
+    //document.querySelector("#answersQuestion").addEventListener("click",startQuiz);
+    console.log(questions[questionNumber].answers);
+
+}
 
 
-// Functions
+
+// =================
+// Section dynamic HTML
+// =================
 document.querySelector("#startButton").addEventListener("click",startQuiz);
 document.querySelector("#stopButton").addEventListener("click",stopQuiz);
