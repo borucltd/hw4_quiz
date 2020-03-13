@@ -40,7 +40,7 @@ let answersArray = [
     "A - true, B - false"
 ]
 
-// c
+// correct answers
 let correctAnswersArray = [
     "C - scripting lanugage for websites",
     "A - //",
@@ -58,9 +58,6 @@ for (let i = 0; i < questionsArray.length; i++){
     let question_object = new question(questionsArray[i],answersArray[i],correctAnswersArray[i]);
     // push new object to array
     questions.push(question_object);
-    // debug
-    console.log(questions[i].choices);
-    console.log(questions[i].correctChoices);
 
 }
 
@@ -109,7 +106,7 @@ function askQuestion( question,  questionNumber, clear) {
         
     // if clear is false just display new question
     if (clear === false) {
-        console.log("dsda");
+        
         // create DOM elements to display actual question
         let questionParagraph = document.createElement("P");  
         let questionText = document.createTextNode(question[questionNumber].question);       
@@ -126,16 +123,20 @@ function askQuestion( question,  questionNumber, clear) {
             let answerCheckBox = document.createElement("INPUT");
             let answerLabel = document.createElement("LABEL");
 
-            // add attributes do DOMs
+            // add attributes to DOMs
             answerFormGroup.setAttribute("class","form-group");
-            // thid id will be used later to remove DOMs
+            // this id will be used later to remove DOMs
             answerFormGroup.setAttribute("id","answerFG");
             answerCheckBox.setAttribute("type", "checkbox");
-            answerLabel.setAttribute("for",i);
+            // id will be used to check the answer
+            answerCheckBox.setAttribute("id", "chk" + i);
+            answerLabel.setAttribute("for","chk" + i);
+            answerLabel.setAttribute("id","lbl" + i);
             
             // split array with asnwers and index it
-            answerLabel.innerHTML = question[questionNumber].answers.split(",")[i];
-
+            //answerLabel.innerHTML = question[questionNumber].answers.split(",")[i];
+            answerLabel.textContent = question[questionNumber].answers.split(",")[i];
+            console.log(answerLabel.textContent);
             // add checkbox to form
             answerFormGroup.appendChild(answerCheckBox);
             // add label to form
@@ -180,7 +181,37 @@ function safeResult() {
 // function which submits answers
 function submitAnswer() {
 
-   
+    // check for all checked answers and make one answer
+    // iterate over each checkbox
+    let tmp_checkbox;
+    let single_answer;
+    let givenAnswers = [];
+    console.log("heeeere");
+    for (let i = 0; i < questions[currentQuestion].choices; i++) {
+
+        tmp_checkbox = document.querySelector("#chk"+i);
+        single_answer = document.querySelector("#lbl"+i);
+
+        if (tmp_checkbox.checked) {
+            
+            // push related label value to givenAnswers array
+            givenAnswers.push(single_answer.textContent);
+
+        }
+
+    }
+
+    // compare user answer with correct answer
+    console.log(givenAnswers.join(",") );
+    console.log(correctAnswersArray[currentQuestion]);
+    if ( givenAnswers.join(",") === correctAnswersArray[currentQuestion]) {
+        console.log("GOOD");
+
+    } else {
+        console.log('BAD');
+    }
+
+    
 
     // Check if there is a not-asked questions
     if (currentQuestion <= totalQuestions) {
