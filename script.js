@@ -30,14 +30,14 @@ let questionsArray = [
 // total questions
 let totalQuestions = questionsArray.length;
 
-// all possible answers
+// all possible answers, each answer separate by ,
 let answersArray = [
-    "A - low level programming language, B - subprogram written in Java, C - scripting lanugage for websites, D - hell knows ",
-    "A - //, B - *, C - <!--, D - #",
-    "A - assingment, B - value comparison, C - type comparison, D - value and type comparison",
-    "A - i++, B - i = i + 1, C - i%2, D - you can't do that",
-    "A - prompts, B - alerts, C - popup, D - config",
-    "A - true, B - false"
+    "A - low level programming language,B - subprogram written in Java,C - scripting lanugage for websites,D - hell knows ",
+    "A - //,B - *,C - <!--,D - #",
+    "A - assingment,B - value comparison,C - type comparison,D - value and type comparison",
+    "A - i++,B - i = i + 1,C - i%2,D - you can't do that",
+    "A - prompts,B - alerts,C - popup,D - config",
+    "A - true,B - false"
 ]
 
 // correct answers
@@ -60,6 +60,10 @@ for (let i = 0; i < questionsArray.length; i++){
     questions.push(question_object);
 
 }
+
+//  DOM elements, which will not change, lets select them once ONLY
+let lastAnswer = document.querySelector("#lastAnswer");
+let summary = document.querySelector("#summary");
 
 // =================
 // Section functions
@@ -105,7 +109,7 @@ function stopQuiz() {
 function askQuestion( question,  questionNumber, clear) { 
         
     // if clear is false just display new question
-    if (clear === false) {
+    if (clear === false && currentQuestion < totalQuestions) {
         
         // create DOM elements to display actual question
         let questionParagraph = document.createElement("P");  
@@ -134,9 +138,8 @@ function askQuestion( question,  questionNumber, clear) {
             answerLabel.setAttribute("id","lbl" + i);
             
             // split array with asnwers and index it
-            //answerLabel.innerHTML = question[questionNumber].answers.split(",")[i];
             answerLabel.textContent = question[questionNumber].answers.split(",")[i];
-            console.log(answerLabel.textContent);
+        
             // add checkbox to form
             answerFormGroup.appendChild(answerCheckBox);
             // add label to form
@@ -165,9 +168,10 @@ function askQuestion( question,  questionNumber, clear) {
 
 // function which displays resuls
 function displayResult() {
+    lastAnswer.remove();
+    summary.setAttribute("class","text-info");
+    summary.textContent = "Correct: " + totalAnswers[0] + ", Incorrect: " + totalAnswers[1];
 
-
-    console.log("results are");
 }
 
 // functions which safes results to local storage
@@ -181,53 +185,70 @@ function safeResult() {
 // function which submits answers
 function submitAnswer() {
 
-    // check for all checked answers and make one answer
-    // iterate over each checkbox
+    // placeholders
     let tmp_checkbox;
     let single_answer;
     let givenAnswers = [];
-    console.log("heeeere");
-    for (let i = 0; i < questions[currentQuestion].choices; i++) {
+    
+    // Check if there are answers to process
+    if (currentQuestion <= totalQuestions - 1) {
 
-        tmp_checkbox = document.querySelector("#chk"+i);
-        single_answer = document.querySelector("#lbl"+i);
+        // iterate over answers (checkbox and labels)
+        for (let i = 0; i < questions[currentQuestion].choices; i++) {
 
-        if (tmp_checkbox.checked) {
-            
-            // push related label value to givenAnswers array
-            givenAnswers.push(single_answer.textContent);
-
+            tmp_checkbox = document.querySelector("#chk"+i);
+            single_answer = document.querySelector("#lbl"+i);
+    
+            // selected checkbox indicates lables which are addedd to final answer
+            if (tmp_checkbox.checked) {
+                
+                // push related label to aarray givenAnswers
+                givenAnswers.push(single_answer.textContent);
+    
+            }
+    
         }
-
-    }
-
-    // compare user answer with correct answer
-    console.log(givenAnswers.join(",") );
-    console.log(correctAnswersArray[currentQuestion]);
-    if ( givenAnswers.join(",") === correctAnswersArray[currentQuestion]) {
-        console.log("GOOD");
+    
+        // compare user answer with correct answer
+        if ( givenAnswers.join(",") === correctAnswersArray[currentQuestion]) {
+           
+            // increase the counter for good answers
+            totalAnswers[0]++;
+            lastAnswer.setAttribute("class","text-success");
+            lastAnswer.textContent = "CORRECT";
+        
+        } else {
+        
+            // increase counter for wrong answers
+            totalAnswers[1]++;
+            lastAnswer.setAttribute("class","text-danger");
+            lastAnswer.textContent = "INCORRECT";
+        
+        }      
+    } 
+    
+    // if this is the last question
+    if (currentQuestion == totalQuestions - 1 ) {
+        
+        // stop timer
+        clearInterval(timerId);
+        // manage results
+        displayResult();
+        safeResult();
 
     } else {
-        console.log('BAD');
-    }
 
-    
-
-    // Check if there is a not-asked questions
-    if (currentQuestion <= totalQuestions) {
-        // remove previous question
+        console.log("BS");
+      
+        // prepare for the next question
+        // remove DOM for actual question
         askQuestion(questions,currentQuestion,true);
         // create new question
         currentQuestion++;
+        // display DOM for new question
         askQuestion(questions,currentQuestion,false);
-    } else {
 
-        // Check answers
-
-        // Manage results
-        displayResult();
-        safeResult();
-    }
+    }   
 }
 
 // =================
