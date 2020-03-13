@@ -27,6 +27,9 @@ let questionsArray = [
     "Is JavaScript and older brother to Java?"
 ]
 
+// total questions
+let totalQuestions = questionsArray.length;
+
 // all possible answers
 let answersArray = [
     "A - low level programming language, B - subprogram written in Java, C - scripting lanugage for websites, D - hell knows ",
@@ -159,19 +162,41 @@ function askQuestion( question,  questionNumber, clear) {
         }            
 }
 
+// function which displays resuls
+function displayResult() {
 
+
+    console.log("results are");
+}
+
+// functions which safes results to local storage
+function safeResult() {
+
+
+    console.log("Saved results");
+}
+
+
+// function which submits answers
 function submitAnswer() {
 
-    // Check if there is a not-asked questions
-    if (currentQuestion < 5) {
+   
 
+    // Check if there is a not-asked questions
+    if (currentQuestion <= totalQuestions) {
+        // remove previous question
         askQuestion(questions,currentQuestion,true);
+        // create new question
         currentQuestion++;
         askQuestion(questions,currentQuestion,false);
+    } else {
+
+        // Check answers
+
+        // Manage results
+        displayResult();
+        safeResult();
     }
-
-
-
 }
 
 // =================
