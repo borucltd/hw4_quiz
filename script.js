@@ -100,48 +100,65 @@ function stopQuiz() {
 
 }
 
-function askQuestion( question,  questionNumber, clear) {
+// This function displays question
+// It removes previous question before displaying the new one
+function askQuestion( question,  questionNumber, clear) { 
+        
+    // if clear is false just display new question
+    if (clear === false) {
+        console.log("dsda");
+        // create DOM elements to display actual question
+        let questionParagraph = document.createElement("P");  
+        let questionText = document.createTextNode(question[questionNumber].question);       
+        questionParagraph.appendChild(questionText);
+        document.querySelector("#questionSection").appendChild(questionParagraph);
 
-    // display question
-    let questionParagraph = document.createElement("P");  
-    let questionText = document.createTextNode(question[questionNumber].question);       
-    document.querySelector("#questionSection").appendChild(questionParagraph.appendChild(questionText));
-   
-    // form answer section, it depends on number of answers
-    for (let i = 0; i < question[questionNumber].choices; i++) {
-        
-        
-        
-        //answer.innerHTML = question[questionNumber].answers[i];
-        if (clear === false) {
+        // create DOM elements to display answers 
+        // number of answers is dynamic and depends on the question
+        // each answer is a pair of LABEL and CHECKBOX
+        for (let i = 0; i < question[questionNumber].choices; i++) {
+
+            // create DOMs
             let answerFormGroup = document.createElement("SECTION");
-        let answerCheckBox = document.createElement("INPUT");
-        let answerLabel = document.createElement("LABEL");
+            let answerCheckBox = document.createElement("INPUT");
+            let answerLabel = document.createElement("LABEL");
 
-        answerFormGroup.setAttribute("class","form-group");
-        answerFormGroup.setAttribute("id","fg"+i);
-        answerCheckBox.setAttribute("type", "checkbox");
-        answerCheckBox.setAttribute("id", i);
-        answerLabel.setAttribute("for",i);
+            // add attributes do DOMs
+            answerFormGroup.setAttribute("class","form-group");
+            // thid id will be used later to remove DOMs
+            answerFormGroup.setAttribute("id","answerFG");
+            answerCheckBox.setAttribute("type", "checkbox");
+            answerLabel.setAttribute("for",i);
+            
+            // split array with asnwers and index it
             answerLabel.innerHTML = question[questionNumber].answers.split(",")[i];
+
+            // add checkbox to form
             answerFormGroup.appendChild(answerCheckBox);
+            // add label to form
             answerFormGroup.appendChild(answerLabel);
+            // add form to answerSection
             document.querySelector("#answersSection").appendChild(answerFormGroup);
+        }
         } else {
-            console.log("removing actual question");
-            var removeFormGroup = document.getElementById("fg"+i);   
-            for (let j =0; j < removeFormGroup.childElementCount; j++){
-                removeFormGroup.removeChild(removeFormGroup.childNodes[j]);
 
-
-            }            
+        // Remove question and answers
+        let removeQuestion = document.querySelector("#questionSection");
+        let removeAnswers = document.querySelector("#answersSection");
+        
+        // remove question
+        while (removeQuestion.hasChildNodes()){
+            removeQuestion.removeChild(removeQuestion.firstChild);
         }
        
-        
+        // remove answers
+        while (removeAnswers.hasChildNodes()){
+            removeAnswers.removeChild(removeAnswers.firstChild);
+        }
 
-    }
-
+        }            
 }
+
 
 function submitAnswer() {
 
