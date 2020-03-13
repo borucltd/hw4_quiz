@@ -3,7 +3,7 @@
 // =================
 
 // 5-minutes quiz
-let quizTime = 300;
+let quizTime = 120;
 
 // each wrong answer decreases time by 10 seconds
 let decreaseTime = 10;
@@ -64,14 +64,46 @@ for (let i = 0; i < questionsArray.length; i++){
 //  DOM elements, which will not change, lets select them once ONLY
 let lastAnswer = document.querySelector("#lastAnswer");
 let summary = document.querySelector("#summary");
+let timeLeft = document.querySelector("#timeLeft");
+let startButton = document.querySelector("#startButton");
+let stopButton = document.querySelector("#stopButton");
+let submitButton = document.querySelector("#submitButton");
+
 
 // =================
 // Section functions
 // =================
+
+// function which sets page to initial state
+function onPageLoad() {
+    // set the time
+    timeLeft.textContent = quizTime;
+    // disable buttons
+    stopButton.setAttribute("class","btn btn-dark disabled no-click");
+    submitButton.setAttribute("class","btn btn-dark disabled no-click")
+
+    // initiate default values - when we repeat the test
+    // 5-minutes quiz
+    quizTime = 120;
+    decreaseTime = 10;
+    totalAnswers = [0, 0];
+    timerId=0;
+    currentQuestion = 0;
+
+}
+
 function startQuiz() {
 
+    // set time back
+    quizTime = 120;
+    // disable start button using custom CSS from style.css -> no-click
+    startButton.setAttribute("class","btn btn-dark disabled no-click");   
     // enable stop button
-    document.querySelector("#stopButton").setAttribute("class","btn btn-dark active");
+    stopButton.setAttribute("class","btn btn-dark active");
+    // enable submit button
+    submitButton.setAttribute("class","btn btn-dark active");
+    // final message
+
     //start counting
     document.querySelector("#timeLeft").textContent = quizTime;
 
@@ -80,12 +112,18 @@ function startQuiz() {
         quizTime--; 
         // need to check <= 0, === 0 is not enough
         if(quizTime <= 0) {
-          // stop the timer
-          clearInterval(timerId);
+            
+            // stop the timer
+            clearInterval(timerId);
+            stopButton.setAttribute("class","btn btn-dark disabled no-click");
+            submitButton.setAttribute("class","btn btn-dark disabled no-click")
+            // enable start button
+            startButton.setAttribute("class","btn btn-dark")
+            displayResult();
         }
         document.querySelector("#timeLeft").textContent = quizTime;       
       }, 1000);
-    
+    askQuestion(questions,currentQuestion,true);
     askQuestion(questions,0,false);
 
 
@@ -94,13 +132,13 @@ function startQuiz() {
 function stopQuiz() {
 
     // disable buttons
-    document.querySelector("#startButton").setAttribute("class","btn btn-dark disabled");
-    document.querySelector("#submitButton").setAttribute("class","btn btn-dark disabled");
+    startButton.setAttribute("class","btn btn-dark disabled no-click");
+    submitButton.setAttribute("class","btn btn-dark disabled no-click");
 
     // stop timer
     clearInterval(timerId);
     quizTime = 1;
-    console.log("YOU GAVE UP!!!");
+    summary.textContent = "YOU GAVE UP - refresh the page!!!";
 
 }
 
@@ -170,7 +208,7 @@ function askQuestion( question,  questionNumber, clear) {
 function displayResult() {
     lastAnswer.remove();
     summary.setAttribute("class","text-info");
-    summary.textContent = "Correct: " + totalAnswers[0] + ", Incorrect: " + totalAnswers[1];
+    summary.textContent = "Correct: " + totalAnswers[0] + ", Incorrect: " + totalAnswers[1] +", Time left " + quizTime + "s.";
 
 }
 
@@ -223,8 +261,12 @@ function submitAnswer() {
             totalAnswers[1]++;
             lastAnswer.setAttribute("class","text-danger");
             lastAnswer.textContent = "INCORRECT";
+
+            // reduce total time by decreaseTime
+            quizTime-=decreaseTime;
         
-        }      
+        }  
+        console.log( lastAnswer);    
     } 
     
     // if this is the last question
@@ -234,12 +276,14 @@ function submitAnswer() {
         clearInterval(timerId);
         // manage results
         displayResult();
+        submitButton.setAttribute("class","btn btn-dark disabled no-click");
+        stopButton.setAttribute("class","btn btn-dark disabled no-click");
+        startButton.setAttribute("class","btn btn-dark");
+        onPageLoad();
         safeResult();
 
     } else {
-
-        console.log("BS");
-      
+     
         // prepare for the next question
         // remove DOM for actual question
         askQuestion(questions,currentQuestion,true);
@@ -254,6 +298,7 @@ function submitAnswer() {
 // =================
 // Section dynamic HTML
 // =================
+
 document.querySelector("#startButton").addEventListener("click",startQuiz);
 document.querySelector("#stopButton").addEventListener("click",stopQuiz);
 document.querySelector("#submitButton").addEventListener("click",submitAnswer);

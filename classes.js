@@ -12,10 +12,6 @@ class question {
         this.choices = this.answers.split(",").length;
         // number of correct choices
         this.correctChoices = this.correctAnswers.split(",").length;
-        
-
     }
-
-
-
+    
 };
