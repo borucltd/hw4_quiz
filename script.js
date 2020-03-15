@@ -11,6 +11,7 @@ let decreaseTime = 10;
 // total answers, index 0 correct answer, index 1 wrong answer
 let totalAnswers = [0, 0];
 
+
 // timerid
 let timerId=0;
 
@@ -124,8 +125,28 @@ function startQuiz() {
     stopButton.setAttribute("class","btn btn-dark active");
     // enable submit button
     submitButton.setAttribute("class","btn btn-dark active");
-    // final message
+    // hide save section
+    let saveSection = document.querySelector("#saveSection");
+    if (saveSection != null) {
+        saveSection.remove();
 
+        // check local storage and display
+        summary.setAttribute("class","text-info");
+        let initials = localStorage.getItem("lsInitials");
+        let time = localStorage.getItem("lsTime");
+        let correct = localStorage.getItem("lsCorrect");
+
+        if (initials != null && time != null && correct != null) {
+
+            summary.textContent = "Hey " + initials + " last time you had " + correct + " correct. Your time was:" + time + "s.";
+
+        }
+
+    }     
+    
+    
+
+    
     //start counting
     document.querySelector("#timeLeft").textContent = quizTime;
 
@@ -232,7 +253,15 @@ function askQuestion( question,  questionNumber, clear) {
 function displayResult() {
     lastAnswer.remove();
     summary.setAttribute("class","text-info");
-    summary.textContent = "Correct: " + totalAnswers[0] + ", Incorrect: " + totalAnswers[1] +", Time left " + quizTime + "s.";
+    let initials = localStorage.getItem("lsInitials");
+   
+
+    if (initials != null){
+
+        summary.textContent = "Hey " + initials + " this time you have " + totalAnswers[0] + " correct and " + totalAnswers[1] +" incorrect. Your time:" + quizTime + "s.";
+
+    }
+    
 
 }
 
@@ -249,7 +278,7 @@ function saveResult() {
     saveInitials.setAttribute("maxlength","16");
     saveButton.innerText = "SAVE";
     saveButton.setAttribute("class","btn btn-dark");
-    saveLabel.innerText = "Provide you initials: ";
+    saveLabel.innerText = "Not you? provide you initials: ";
 
     saveSection.appendChild(saveLabel);
     saveSection.appendChild(saveInitials);
@@ -262,7 +291,7 @@ function saveResult() {
         // save initials
         localStorage.setItem("lsInitials",saveInitials.value);
         // save time
-        localStorage.setItem("lsTime",quizTime.toString());
+        localStorage.setItem("lsTime",document.querySelector("#timeLeft").textContent.toString());
         // save number of correct answers
         localStorage.setItem("lsCorrect",totalAnswers[0].toString());
         // change button to success
@@ -304,14 +333,14 @@ function submitAnswer() {
         if ( givenAnswers.join(",") === correctAnswersArray[currentQuestion]) {
            
             // increase the counter for good answers
-            totalAnswers[0]++;
+            totalAnswers[0]=totalAnswers[0] + 1;
             lastAnswer.setAttribute("class","text-success");
             lastAnswer.textContent = "CORRECT";
         
         } else {
         
             // increase counter for wrong answers
-            totalAnswers[1]++;
+            totalAnswers[1] = totalAnswers[1] + 1 ;
             lastAnswer.setAttribute("class","text-danger");
             lastAnswer.textContent = "INCORRECT";
 
