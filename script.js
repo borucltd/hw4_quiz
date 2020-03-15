@@ -122,7 +122,7 @@ function startQuiz() {
 
         if (initials != null && time != null && correct != null) {
 
-            summary.textContent = "Hey " + initials + " last time you had " + correct + " correct. Your time was:" + time + "s.";
+            summary.textContent = "Hey " + initials + " last time you had " + correct + " correct answers. Your time was:" + time + "s.";
 
         }
 
@@ -233,18 +233,16 @@ function askQuestion( question,  questionNumber, clear) {
 
 // function which displays results
 function displayResult() {
+
     //lastAnswer.remove();
     summary.setAttribute("class","text-info");
-    let initials = localStorage.getItem("lsInitials");
-   
 
-    if (initials != null){
-
-        summary.textContent = "Hey " + initials + " this time you have " + totalAnswers[0] + " correct and " + totalAnswers[1] +" incorrect. Your time:" + quizTime + "s.";
-
+    if (localStorage.getItem("lsInitials") == null) {
+        let initials = "UNKNOWN";
+    } else {
+        let initials = localStorage.getItem("lsInitials");
+        summary.textContent = "Hey " + initials + " this time you have " + totalAnswers[0] + " correct and " + totalAnswers[1] +" incorrect answers. Your time:" + quizTime + "s.";
     }
-    
-
 }
 
 // functions which saves results to local storage
@@ -308,7 +306,7 @@ function submitAnswer() {
             // selected checkbox indicates lables which are addedd to final answer
             if (tmp_checkbox.checked) {
                 
-                // push related label to aarray givenAnswers
+                // push related label to array givenAnswers
                 givenAnswers.push(single_answer.textContent);
     
             }
@@ -339,19 +337,18 @@ function submitAnswer() {
     
     // if this is the last question
     if (currentQuestion == totalQuestions - 1 ) {
-        
+
+        submitButton.setAttribute("class","btn btn-dark disabled no-click");
+        stopButton.setAttribute("class","btn btn-dark disabled no-click");
+        startButton.setAttribute("class","btn btn-dark");
         // stop timer
         clearInterval(timerId);
         // manage results
         displayResult();
-        submitButton.setAttribute("class","btn btn-dark disabled no-click");
-        stopButton.setAttribute("class","btn btn-dark disabled no-click");
-        startButton.setAttribute("class","btn btn-dark");
-        onPageLoad();
+        // save results
         saveResult();
 
     } else {
-     
         // prepare for the next question
         // remove DOM for actual question
         askQuestion(questions,currentQuestion,true);
@@ -359,7 +356,6 @@ function submitAnswer() {
         currentQuestion++;
         // display DOM for new question
         askQuestion(questions,currentQuestion,false);
-
     }   
 }
 
