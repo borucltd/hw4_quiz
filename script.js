@@ -70,7 +70,6 @@ let stopButton = document.querySelector("#stopButton");
 let submitButton = document.querySelector("#submitButton");
 let resultSection = document.querySelector("#resultSection");
 
-
 // =================
 // Section functions
 // =================
@@ -93,14 +92,21 @@ function onPageLoad() {
     timerId=0;
     currentQuestion = 0;
 
-    // check local storage and dislay if anything was found
-    function readLocalStorage();    
+    // check local storage
+   // if ( localStorage.getItem("initials") === null && localStorage.getItem("") ===  ) {
+
+     //   console.log("not set");
+    //} else {
+      //  console.log("set");
+
+    //}
 
 }
 
 // function which checks local storage
 function readLocalStorage() {
 
+    console.log("dsada");
 
 
 
@@ -240,15 +246,29 @@ function saveResult() {
     let saveButton = document.createElement("BUTTON");
 
     saveSection.setAttribute("id","saveSection");
-    saveInitials.setAttribute("type","text");
-    saveInitials.setAttribute("title","Only letters");
+    saveInitials.setAttribute("maxlength","16");
     saveButton.innerText = "SAVE";
+    saveButton.setAttribute("class","btn btn-dark");
     saveLabel.innerText = "Provide you initials: ";
 
     saveSection.appendChild(saveLabel);
     saveSection.appendChild(saveInitials);
     saveSection.appendChild(saveButton);
     resultSection.appendChild(saveSection);
+    
+    // save data to local storage
+    saveButton.addEventListener("click", function () {
+        
+        // save initials
+        localStorage.setItem("lsInitials",saveInitials.value);
+        // save time
+        localStorage.setItem("lsTime",quizTime.toString());
+        // save number of correct answers
+        localStorage.setItem("lsCorrect",totalAnswers[0].toString());
+        // change button to success
+        saveButton.setAttribute("class","btn btn-success");
+
+    });
 
 }
 
@@ -299,7 +319,7 @@ function submitAnswer() {
             quizTime-=decreaseTime;
         
         }  
-        console.log( lastAnswer);    
+           
     } 
     
     // if this is the last question
