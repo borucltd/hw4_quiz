@@ -11,7 +11,6 @@ let decreaseTime = 10;
 // total answers, index 0 correct answer, index 1 wrong answer
 let totalAnswers = [0, 0];
 
-
 // timerid
 let timerId=0;
 
@@ -22,9 +21,9 @@ let currentQuestion = 0;
 let questionsArray = [
     "What is JavaScript?",
     "Which symbol is used for comments in Javascript?",
-    "What is === operator?",
-    "How can you increment integer by 5?",
-    "What are all the types of Pop up boxes available in JavaScript?",
+    "What does \"===\" operator do?",
+    "How to increment and integer by 5?",
+    "What dialog boxes are available in JavaScript?",
     "Is JavaScript and older brother to Java?"
 ]
 
@@ -36,8 +35,8 @@ let answersArray = [
     "A - low level programming language,B - subprogram written in Java,C - scripting lanugage for websites,D - hell knows ",
     "A - //,B - *,C - <!--,D - #",
     "A - assingment,B - value comparison,C - type comparison,D - value and type comparison",
-    "A - i++,B - i = i + 1,C - i%2,D - you can't do that",
-    "A - prompts,B - alerts,C - popup,D - config",
+    "A - i++,B - i = i + 5,C - i%5 + 5,D - i+5",
+    "A - prompt dialog box,B - alert dialog box,C - popup dialog box,D - confirmation dialog box",
     "A - true,B - false"
 ]
 
@@ -46,8 +45,8 @@ let correctAnswersArray = [
     "C - scripting lanugage for websites",
     "A - //",
     "D - value and type comparison",
-    "A - i++, B - i = i + 1",
-    "A - prompts, B - alerts,D - config",
+    "B - i = i + 5",
+    "A - prompt dialog box,B - alert dialog box,D - confirmation dialog box",
     "B - false"
 ]
 
@@ -75,50 +74,34 @@ let resultSection = document.querySelector("#resultSection");
 // Section functions
 // =================
 
-// function which sets page to initial state
+// function which sets up page to initial state
 function onPageLoad() {
 
-    // set the time
+    //initiate default values - when we repeat the test
+    //quizTime = 120;
+    //decreaseTime = 10;
+    //totalAnswers = [0, 0];
+    //timerId=0;
+    //currentQuestion = 0;
+
+    // read the time from global variabla and display in DOM
     timeLeft.textContent = quizTime;
 
-    // disable buttons
+    // disable stop, submit buttons using custom CSS from style.css -> no-click
     stopButton.setAttribute("class","btn btn-dark disabled no-click");
-    submitButton.setAttribute("class","btn btn-dark disabled no-click")
-
-    // initiate default values - when we repeat the test
-    // 5-minutes quiz
-    quizTime = 120;
-    decreaseTime = 10;
-    totalAnswers = [0, 0];
-    timerId=0;
-    currentQuestion = 0;
-
-    // check local storage
-   // if ( localStorage.getItem("initials") === null && localStorage.getItem("") ===  ) {
-
-     //   console.log("not set");
-    //} else {
-      //  console.log("set");
-
-    //}
-
-}
-
-// function which checks local storage
-function readLocalStorage() {
-
-    console.log("dsada");
-
-
-
+    submitButton.setAttribute("class","btn btn-dark disabled no-click");    
 
 }
 
 // function which starts the quiz
 function startQuiz() {
 
-    // set time back
+    // set some values back to defaults, this is becaue we can click start button many times
     quizTime = 120;
+    totalAnswers = [0, 0];
+    timerId=0;
+    currentQuestion = 0;
+
     // disable start button using custom CSS from style.css -> no-click
     startButton.setAttribute("class","btn btn-dark disabled no-click");   
     // enable stop button
@@ -127,10 +110,11 @@ function startQuiz() {
     submitButton.setAttribute("class","btn btn-dark active");
     // hide save section
     let saveSection = document.querySelector("#saveSection");
+
     if (saveSection != null) {
         saveSection.remove();
 
-        // check local storage and display
+        // check local storage and display if it is not null
         summary.setAttribute("class","text-info");
         let initials = localStorage.getItem("lsInitials");
         let time = localStorage.getItem("lsTime");
@@ -142,18 +126,15 @@ function startQuiz() {
 
         }
 
-    }     
+    }    
     
+    // re-load the total time, we do this when we refresh the page (function onpageload) AND when we click start button
+    timeLeft.textContent = quizTime;
     
-
-    
-    //start counting
-    document.querySelector("#timeLeft").textContent = quizTime;
-
-
+    // start the timer
     timerId = setInterval(function() {
         quizTime--; 
-        // need to check <= 0, === 0 is not enough
+        // need to check <= 0
         if(quizTime <= 0) {
             
             // stop the timer
@@ -164,12 +145,13 @@ function startQuiz() {
             startButton.setAttribute("class","btn btn-dark")
             displayResult();
         }
-        document.querySelector("#timeLeft").textContent = quizTime;       
+        // update how much time is left, write it to DOM
+        timeLeft.textContent = quizTime;     
       }, 1000);
+    // here we clear question and its answer from DOM
     askQuestion(questions,currentQuestion,true);
+    // here we display FIRST question and its answers
     askQuestion(questions,0,false);
-
-
 }
 
 function stopQuiz() {
@@ -180,7 +162,7 @@ function stopQuiz() {
 
     // stop timer
     clearInterval(timerId);
-    quizTime = 1;
+    //quizTime = 1;
     summary.setAttribute("class","text-danger");
     summary.textContent = "YOU GAVE UP - refresh the page!!!";
 
@@ -251,7 +233,7 @@ function askQuestion( question,  questionNumber, clear) {
 
 // function which displays results
 function displayResult() {
-    lastAnswer.remove();
+    //lastAnswer.remove();
     summary.setAttribute("class","text-info");
     let initials = localStorage.getItem("lsInitials");
    
@@ -289,9 +271,13 @@ function saveResult() {
     saveButton.addEventListener("click", function () {
         
         // save initials
-        localStorage.setItem("lsInitials",saveInitials.value);
+        if (saveInitials.value === "" ) {
+            localStorage.setItem("lsInitials","UNKNOWN");
+        } else {
+            localStorage.setItem("lsInitials",saveInitials.value);
+        }
         // save time
-        localStorage.setItem("lsTime",document.querySelector("#timeLeft").textContent.toString());
+        localStorage.setItem("lsTime",timeLeft.textContent.toString());
         // save number of correct answers
         localStorage.setItem("lsCorrect",totalAnswers[0].toString());
         // change button to success
