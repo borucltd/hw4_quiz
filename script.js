@@ -68,6 +68,7 @@ let timeLeft = document.querySelector("#timeLeft");
 let startButton = document.querySelector("#startButton");
 let stopButton = document.querySelector("#stopButton");
 let submitButton = document.querySelector("#submitButton");
+let resultSection = document.querySelector("#resultSection");
 
 
 // =================
@@ -76,8 +77,10 @@ let submitButton = document.querySelector("#submitButton");
 
 // function which sets page to initial state
 function onPageLoad() {
+
     // set the time
     timeLeft.textContent = quizTime;
+
     // disable buttons
     stopButton.setAttribute("class","btn btn-dark disabled no-click");
     submitButton.setAttribute("class","btn btn-dark disabled no-click")
@@ -90,8 +93,21 @@ function onPageLoad() {
     timerId=0;
     currentQuestion = 0;
 
+    // check local storage and dislay if anything was found
+    function readLocalStorage();    
+
 }
 
+// function which checks local storage
+function readLocalStorage() {
+
+
+
+
+
+}
+
+// function which starts the quiz
 function startQuiz() {
 
     // set time back
@@ -138,6 +154,7 @@ function stopQuiz() {
     // stop timer
     clearInterval(timerId);
     quizTime = 1;
+    summary.setAttribute("class","text-danger");
     summary.textContent = "YOU GAVE UP - refresh the page!!!";
 
 }
@@ -154,7 +171,8 @@ function askQuestion( question,  questionNumber, clear) {
         let questionText = document.createTextNode(question[questionNumber].question);       
         questionParagraph.appendChild(questionText);
         document.querySelector("#questionSection").appendChild(questionParagraph);
-
+        // add border to qasection
+        document.querySelector("#qasection").setAttribute("class","col-lg-6 col-md-6 col-sm-6 pt-3 border rounded text-center");
         // create DOM elements to display answers 
         // number of answers is dynamic and depends on the question
         // each answer is a pair of LABEL and CHECKBOX
@@ -204,7 +222,7 @@ function askQuestion( question,  questionNumber, clear) {
         }            
 }
 
-// function which displays resuls
+// function which displays results
 function displayResult() {
     lastAnswer.remove();
     summary.setAttribute("class","text-info");
@@ -212,11 +230,26 @@ function displayResult() {
 
 }
 
-// functions which safes results to local storage
-function safeResult() {
+// functions which saves results to local storage
+function saveResult() {
 
+    // create save section form
+    let saveSection = document.createElement("SECTION");
+    let saveLabel = document.createElement("LABEL");
+    let saveInitials = document.createElement("INPUT");
+    let saveButton = document.createElement("BUTTON");
 
-    console.log("Saved results");
+    saveSection.setAttribute("id","saveSection");
+    saveInitials.setAttribute("type","text");
+    saveInitials.setAttribute("title","Only letters");
+    saveButton.innerText = "SAVE";
+    saveLabel.innerText = "Provide you initials: ";
+
+    saveSection.appendChild(saveLabel);
+    saveSection.appendChild(saveInitials);
+    saveSection.appendChild(saveButton);
+    resultSection.appendChild(saveSection);
+
 }
 
 
@@ -280,7 +313,7 @@ function submitAnswer() {
         stopButton.setAttribute("class","btn btn-dark disabled no-click");
         startButton.setAttribute("class","btn btn-dark");
         onPageLoad();
-        safeResult();
+        saveResult();
 
     } else {
      
@@ -298,7 +331,7 @@ function submitAnswer() {
 // =================
 // Section dynamic HTML
 // =================
-
+onPageLoad();
 document.querySelector("#startButton").addEventListener("click",startQuiz);
 document.querySelector("#stopButton").addEventListener("click",stopQuiz);
 document.querySelector("#submitButton").addEventListener("click",submitAnswer);
