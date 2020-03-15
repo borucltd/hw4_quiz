@@ -1,42 +1,32 @@
-# 04 Web APIs: Code Quiz
-
-As you proceed in your career as a web developer, you will probably be asked to complete a coding assessment, which is typically a combination of multiple-choice questions and interactive challenges. Build a timed code quiz with multiple-choice questions. This app will run in the browser and feature dynamically updated HTML and CSS powered by your JavaScript code. It will also feature a clean and polished user interface and be responsive, ensuring that it adapts to multiple screen sizes.
-
-## User Story
+# JavaScipt QUIZ
 
 ```
-AS A coding bootcamp student
-I WANT to take a timed quiz on JavaScript fundamentals that stores high scores
-SO THAT I can gauge my progress compared to my peers
+This is a simple web page which acts as a short quiz. There are only a few questions, which are multiple choice. 
 ```
 
-## Acceptance Criteria
+## Getting Started
 
 ```
-GIVEN I am taking a code quiz
-WHEN I click the start button
-THEN a timer starts and I am presented with a question
-WHEN I answer a question
-THEN I am presented with another question
-WHEN I answer a question incorrectly
-THEN time is subtracted from the clock
-WHEN all questions are answered or the timer reaches 0
-THEN the game is over
-WHEN the game is over
-THEN I can save my initials and score
+Open the web page in your browser. When ready, click START and the quiz will begin. There are 120 seconds to answer to 6 questions. Each incorrect answer will reduce the timer by 10 seconds. At the end, provide your initials so the web page will use them next time, when you repeat the quiz. Data is stored locally in your browser.
 ```
 
-The following animation demonstrates the application functionality:
+## Prerequisities
 
-![code quiz](./Assets/04-web-apis-homework-demo.gif)
 
-### Review
+You just need a web browser. The project was tested on:
+* desktop Chrome
+* mobile Chrome
 
-You are required to submit the following for review:
+### Example
 
-* The URL of the functional, deployed application.
+![example1](./Assets/example1.PNG)
+![example1](./Assets/example2.PNG)
 
-* The URL of the GitHub repository. Give the repository a unique name and include a README describing the project.
+### Built with
 
-- - -
-© 2019 Trilogy Education Services, a 2U, Inc. brand. All Rights Reserved.
+To build this project I used:
+* static html
+* bootstrap
+* custom css
+* javascript managing DOM
+* local storage
